@@ -20,12 +20,13 @@
 // }
 // console.log(currentOs);
 const _ = require("lodash");
+const http = require("http");
+const fs = require("fs");
 const items = [1, [2, [3, [4], [3, [5, [6, [4, 5, 6, 7, 8, 9, 9]]]]]]];
 const newitems = _.flattenDeep(items);
 console.log(newitems);
 console.log("Nodemon is Started");
 
-const http = require("http");
 const server = http.createServer((req, res) => {
   if (req.url === "/") {
     for (let index = 0; index < 300; index++) {
@@ -45,11 +46,10 @@ server.listen(5000);
 
 //Read File ASYNC
 
-const { readFile,writeFile } = require("fs");
-const util =require('util');
-const readFilePromise=util.promisify(readFile)
-const writeFilePromise=util.promisify(writeFile)
-
+const { readFile, writeFile } = require("fs");
+const util = require("util");
+const readFilePromise = util.promisify(readFile);
+const writeFilePromise = util.promisify(writeFile);
 
 const getText = (path) => {
   return new Promise((reslove, reject) => {
@@ -65,7 +65,7 @@ const getText = (path) => {
 
 const start = async () => {
   try {
-    const first = await readFilePromise("./global.js",'utf-8');
+    const first = await readFilePromise("./global.js", "utf-8");
 
     console.log(first);
   } catch (error) {
@@ -76,3 +76,38 @@ start();
 // getText("./global.js")
 //   .then((res) => console.log(res))
 //   .catch((err) => console.log(err));
+
+const EventEmitter = require("events");
+const customEmitter = new EventEmitter();
+
+customEmitter.on("response", (name, id) => {
+  console.log(`data received ${name}, with id ${id} `);
+});
+customEmitter.on("response", () => {
+  console.log(`some other logic here `);
+});
+customEmitter.emit("response", "JOHN", 34);
+
+const { createReadStream } = require("fs");
+const stream = createReadStream("./big.txt", {
+  highWaterMark: 90000,
+  encoding: "utf8",
+});
+stream.on("data", (result) => {
+  console.log(result);
+});
+
+stream.on("error", (err) => {
+  console.log(err);
+});
+http.createServer(function (req, res) {
+  const fileStream = fs.createReadStream("./big.txt", "utf8");
+  fileStream.on("open", () => {
+    fileStream.pipe(res)
+
+  });
+
+  fileStream.on("error", (err) => {
+    res.end(err);
+  });
+});

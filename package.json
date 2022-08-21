@@ -5,15 +5,18 @@
   "main": "alternative-flavor.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start":"node app.js",
-    "dev":"nodemon   app.js"
+    "start": "node app.js",
+    "dev": "nodemon   test.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "bootstrap": "^5.2.0",
-    "lodash": "^4.17.21"
+    "dotenv": "^16.0.1",
+    "express": "^4.18.1",
+    "lodash": "^4.17.21",
+    "mongoose": "^6.5.2"
   },
   "devDependencies": {
     "nodemon": "^2.0.19"
